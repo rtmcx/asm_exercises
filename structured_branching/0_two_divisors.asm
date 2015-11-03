@@ -27,8 +27,6 @@ start:
 	mov 	esi, 0			; keep count of how many divisors 'x' have
 
 div_loop:	
-	;mov 	eax, ecx
-
 	mov	eax, ecx		; variable for div_test
 	call	divisor			; check how many divisors 'x' have
 
@@ -38,7 +36,7 @@ div_loop:
 
 	jmp	exit			; end of the loop
 
-	
+	;STUB	
 divisor:	; check how many divisors number in eax have..
 	call 	print_eax		; print the number
 	ret				; return
