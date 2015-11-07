@@ -19,27 +19,38 @@ section '.text' code readable executable
 
 start:
 	call	read_hex	  	; read 'x' into eax
-	mov 	ebx, eax		; save 'x' to ebx
-	inc	ebx			; add one for looping
+	mov 	ecx, eax		; save 'x' to ecx
 
-	mov 	ecx, 1			; the main counter
+; loop from 'x' to 1...
+main_loop:	
+	push	ecx 			; save current 'x' for later retrieval
 	
-	mov 	esi, 0			; keep count of how many divisors 'x' have
+	mov 	ebx, 0 			; variable for number of divisors for 'x'
+	mov 	esi, ecx		; store 'x' in inner loop counter
 
-div_loop:	
-	mov	eax, ecx		; variable for div_test
-	call	divisor			; check how many divisors 'x' have
+; for every number, divide num with every number from 'self' to 1	
+div_loop:		
+	xor 	edx, edx		; null edx for div 
+	mov 	edi, ecx		; divide current number with inner loop number
+	mov 	eax, esi		; divide 'num' 
+	div 	edi			; with inner loop num
 
-	inc	ecx			; increase counter
-	cmp	ecx, ebx		; have we reached 'x' yet
-	jne	div_loop		; no, next iteration please
+	cmp 	edx, 0			; check reminder			
+	jnz 	not_even		; reminder exist
+	
+	inc 	ebx 			; skip adding divisor
 
-	jmp	exit			; end of the loop
+not_even:
+	loop 	div_loop		; next number..
+	
+	cmp 	ebx, 4			; 1, 2*divisor and 'x'
+	jnz 	no_go			; do not print num if not 4 divisors
 
-	;STUB	
-divisor:	; check how many divisors number in eax have..
-	call 	print_eax		; print the number
-	ret				; return
+	mov 	eax, esi		; print num 
+	call	print_eax
+no_go:
+	pop 	ecx			; restore ecx for next iteration
+	loop 	main_loop
 
 exit:
 	; Exit the process:
